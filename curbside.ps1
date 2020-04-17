@@ -5,6 +5,7 @@ function Get-HEBCurbSideTimes {
         [int]$Radius
     )
 
+    # H-E-B REST API
     $Url = "https://www.heb.com/commerce-api/v1/store/locator/address"
     $ContentType = 'application/json'
     $Body = @{
@@ -15,9 +16,11 @@ function Get-HEBCurbSideTimes {
         includeMedical            =   $false
     } | ConvertTo-Json
 
+    # Retrieve Data
     $times = Invoke-RestMethod -Method Post -Uri $Url -Body $body -ContentType $ContentType
     $list = @()    
 
+    # Parse and Return List
     foreach ($time in $times.stores){
         if ($time.storeNextAvailableTimeslot.nextAvailableTimeslotDate) {
             $t = [PSCustomObject]@{
